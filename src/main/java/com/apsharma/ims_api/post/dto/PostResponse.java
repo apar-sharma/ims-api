@@ -24,5 +24,5 @@ public class PostResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime submittedAt;
-    private LocalDateTime resolvedAt;
+    private LocalDateTime resolvedAt = null; // Stays null till the post is resolved
 }
