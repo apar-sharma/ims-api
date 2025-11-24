@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+// DTO for updating the status of a post
 @Getter
 @Setter
 @NoArgsConstructor
