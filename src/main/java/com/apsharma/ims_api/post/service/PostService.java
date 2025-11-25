@@ -6,14 +6,18 @@ import com.apsharma.ims_api.post.dto.PostStatusUpdateRequest;
 import com.apsharma.ims_api.post.mapper.PostMapper;
 import com.apsharma.ims_api.post.model.Post;
 import com.apsharma.ims_api.post.model.PostStatus;
+import com.apsharma.ims_api.post.model.PostTag;
 import com.apsharma.ims_api.post.repository.PostRepo;
+import com.apsharma.ims_api.post.repository.PostSpecification;
 import com.apsharma.ims_api.user.model.User;
 import com.apsharma.ims_api.user.repository.UserRepo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @Transactional
@@ -38,13 +42,25 @@ public class PostService {
         return postMapper.toResponse(saved);
     }
 
+    public Page<PostResponse> list(String q, String status, String type, Long createdById, Pageable pageable) {
+        // Parse enum values from strings
+        PostStatus postStatus = null;
+        if (status != null && !status.trim().isEmpty()) {
+            postStatus = PostStatus.valueOf(status.toUpperCase());
+        }
 
-    // TODO -> Pagination for list of posts and reimplement this logic
-//    public List<PostResponse> list() {
-//        return postRepo.findAll().stream()
-//                .map(postMapper::toResponse)
-//                .toList();
-//    }
+        PostTag postTag = null;
+        if (type != null && !type.trim().isEmpty()) {
+            postTag = PostTag.valueOf(type.toUpperCase());
+        }
+
+        // Build specification
+        Specification<Post> spec = PostSpecification.build(q, postStatus, postTag, createdById);
+
+        // Fetch and map to response
+        Page<Post> postsPage = postRepo.findAll(spec, pageable);
+        return postsPage.map(postMapper::toResponse);
+    }
 
     public PostResponse get(Long id) {
         Post post = postRepo.findById(id)

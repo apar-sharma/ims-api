@@ -1,0 +1,24 @@
+package com.apsharma.ims_api.user.dto;
+
+import com.apsharma.ims_api.role.model.Role;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserResponse {
+    private Long id;
+    private String username;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private double phoneNumber;
+    private List<Role> roles;
+}
+

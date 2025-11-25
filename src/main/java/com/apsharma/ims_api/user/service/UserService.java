@@ -27,7 +27,7 @@ public class UserService {
 
 
 
-    public void registerUser(User user) {
+    public User registerUser(User user) {
         List<Role> roles = new ArrayList<>();
         for(Role role : user.getRoles()) {
             Role existingRole = roleRepo.findByRoleName(role.getRoleName());
@@ -39,11 +39,12 @@ public class UserService {
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRoles(roles);
-        userRepo.save(user);
+        return userRepo.save(user);
     }
 
-    public void validateUser(User user) {
+    public User validateUser(User user) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        return userRepo.findByUsername(user.getUsername());
     }
 
     public List<User> getAllUser() {
